@@ -183,5 +183,4 @@ describe('Testando página RecipeInProgress', () => {
     expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
   });
 });
-
 // npm run test-coverage -- --collectCoverageFrom=src/components/RecipeInProgress.js;
