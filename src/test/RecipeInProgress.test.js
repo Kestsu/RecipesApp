@@ -73,7 +73,24 @@ describe('Testando página RecipeInProgress', () => {
   a mensagem "Link copied!" é renderizada para a página de comidas`, async () => {
     jest.spyOn(global, 'fetch');
 
-    renderWithRouter(<FoodRecipeInProgress />);
+    renderWithRouter(<App />);
+
+    const email = screen.getByTestId(EMAIL_INPUT);
+    const password = screen.getByTestId(PASSWORD_INPUT);
+    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
+
+    userEvent.type(email, EMAIL);
+    userEvent.type(password, '1234567');
+
+    userEvent.click(button);
+
+    await waitFor(
+      () => {
+        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
+        userEvent.click(corbaRecipe);
+      },
+      { timeout: 4000 },
+    );
 
     const buttonShare = screen.getByTestId('share-btn');
     expect(buttonShare).toBeInTheDocument();
@@ -82,6 +99,65 @@ describe('Testando página RecipeInProgress', () => {
 
     const mensage = screen.queryByText(/Link copied/i);
     expect(mensage).toBeInTheDocument();
+  });
+
+  it(`Testando se o Botão de finalizar receita
+      só é Habilitado após todos os check-Box serem preenchidos`, async () => {
+    jest.spyOn(global, 'fetch');
+
+    renderWithRouter(<App />);
+
+    const email = screen.getByTestId(EMAIL_INPUT);
+    const password = screen.getByTestId(PASSWORD_INPUT);
+    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
+
+    userEvent.type(email, EMAIL);
+    userEvent.type(password, '1234567');
+
+    userEvent.click(button);
+
+    const drinkButton = screen.getByTestId('drinks-bottom-btn');
+
+    userEvent.click(drinkButton);
+
+    await waitFor(
+      () => {
+        const ggRecipe = screen.getByTestId(RECIPE_CARD);
+        userEvent.click(ggRecipe);
+      },
+      { timeout: 4000 },
+    );
+
+    const buttonStart = screen.getByTestId('start-recipe-btn');
+    expect(buttonStart).toBeInTheDocument();
+
+    userEvent.click(buttonStart);
+
+    const checkBoxGaliano = await screen.findByTestId('Galliano');
+    const checkBoxGingerAle = await screen.findByTestId('Ginger ale');
+    const checkBoxIce = await screen.findByTestId('Ice');
+
+    expect(checkBoxGaliano).toBeInTheDocument();
+    expect(checkBoxGingerAle).toBeInTheDocument();
+    expect(checkBoxIce).toBeInTheDocument();
+
+    const buttonFinish = screen.getByTestId('finish-recipe-btn');
+    expect(buttonFinish).toBeInTheDocument();
+    expect(buttonFinish).toBeDisabled();
+
+    userEvent.type(checkBoxGaliano);
+    userEvent.type(checkBoxGingerAle);
+    userEvent.type(checkBoxIce);
+
+    expect(buttonFinish).toBeEnabled();
+
+    userEvent.click(buttonFinish);
+
+    const doneRecipesTitle = screen.getByRole('heading', {
+      name: /done recipes/i,
+    });
+
+    expect(doneRecipesTitle).toBeInTheDocument();
   });
 
   it(`Testando se ao clicar no  botão Favorites 

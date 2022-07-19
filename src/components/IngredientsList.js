@@ -61,6 +61,7 @@ function IngredientsList({
                   <input
                     type="checkbox"
                     id={ ingredient }
+                    data-testid={ ingredient }
                     value={ index }
                     checked={ isChecked(index) }
                     onChange={ () => handleChange(index) }
