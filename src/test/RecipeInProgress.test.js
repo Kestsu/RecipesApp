@@ -83,6 +83,16 @@ describe('Testando página RecipeInProgress', () => {
     const mensage = screen.queryByText(/Link copied/i);
     expect(mensage).toBeInTheDocument();
   });
+
+  it(`Testando se ao clicar no  botão Favorites 
+  a a receita é marcada como favoritada`, async () => {
+    jest.spyOn(global, 'fetch');
+
+    renderWithRouter(<FoodRecipeInProgress />);
+
+    const buttonFavorites = screen.getByTestId('favorite-btn');
+    expect(buttonFavorites).toBeInTheDocument();
+  });
 });
 
 // npm run test-coverage -- --collectCoverageFrom=src/components/RecipeInProgress.js;
