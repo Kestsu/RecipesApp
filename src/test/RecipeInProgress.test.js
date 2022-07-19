@@ -90,8 +90,21 @@ describe('Testando página RecipeInProgress', () => {
 
     renderWithRouter(<FoodRecipeInProgress />);
 
-    const buttonFavorites = screen.getByTestId('favorite-btn');
-    expect(buttonFavorites).toBeInTheDocument();
+    const buttonFavoritesWhiteHeart = screen.getByRole('button', {
+      name: /whitehearticon/i,
+    });
+    expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
+
+    userEvent.click(buttonFavoritesWhiteHeart);
+
+    const buttonFavoritesBlackHeart = screen.getByRole('button', {
+      name: /blackhearticon/i,
+    });
+
+    expect(buttonFavoritesBlackHeart).toBeInTheDocument();
+
+    userEvent.click(buttonFavoritesWhiteHeart);
+    expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
   });
 });
 
