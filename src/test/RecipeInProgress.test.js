@@ -14,6 +14,7 @@ const PASSWORD_INPUT = 'password-input';
 const LOGIN_SUBMIT_BTN = 'login-submit-btn';
 const EMAIL = 'grupo14@gmail.com';
 const RECIPE_CARD = '0-recipe-card';
+const BUTTONSTART = 'start-recipe-btn';
 
 describe('Testando página RecipeInProgress', () => {
   afterEach(() => jest.restoreAllMocks());
@@ -40,7 +41,7 @@ describe('Testando página RecipeInProgress', () => {
       { timeout: 4000 },
     );
 
-    const buttonStart = screen.getByTestId('start-recipe-btn');
+    const buttonStart = screen.getByTestId(BUTTONSTART);
     expect(buttonStart).toBeInTheDocument();
 
     userEvent.click(buttonStart);
@@ -128,7 +129,7 @@ describe('Testando página RecipeInProgress', () => {
       { timeout: 4000 },
     );
 
-    const buttonStart = screen.getByTestId('start-recipe-btn');
+    const buttonStart = screen.getByTestId(BUTTONSTART);
     expect(buttonStart).toBeInTheDocument();
 
     userEvent.click(buttonStart);
@@ -194,6 +195,8 @@ describe('Testando página RecipeInProgress', () => {
   salva a receita em progresso para drinks`, async () => {
     jest.spyOn(global, 'fetch');
 
+    const TRES = 3;
+
     renderWithRouter(<FoodRecipeInProgress />);
 
     const buttonFavoritesWhiteHeart = screen.getByRole('button', {
@@ -203,7 +206,7 @@ describe('Testando página RecipeInProgress', () => {
 
     const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
 
-    expect(LocalStorage.cocktails[15997]).toHaveLength(3);
+    expect(LocalStorage.cocktails[15997]).toHaveLength(TRES);
   });
 
   it(`Testando se ao Renderiza a pagina o Localstorage
@@ -229,7 +232,7 @@ describe('Testando página RecipeInProgress', () => {
       { timeout: 4000 },
     );
 
-    const buttonStart = screen.getByTestId('start-recipe-btn');
+    const buttonStart = screen.getByTestId(BUTTONSTART);
     expect(buttonStart).toBeInTheDocument();
 
     userEvent.click(buttonStart);
@@ -238,14 +241,10 @@ describe('Testando página RecipeInProgress', () => {
     expect(lentilsCheckBox).toBeInTheDocument();
 
     userEvent.type(lentilsCheckBox);
-
     history.goBack();
-
     userEvent.click(buttonStart);
-
     const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
 
     expect(LocalStorage.meals[52977]).toHaveLength(1);
   });
 });
-// npm run test-coverage -- --collectCoverageFrom=src/components/RecipeInProgress.js;
