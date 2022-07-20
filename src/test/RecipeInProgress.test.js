@@ -97,7 +97,7 @@ describe('Testando página RecipeInProgress', () => {
     userEvent.click(buttonShare);
     expect(copy).toHaveBeenCalled();
 
-    const mensage = screen.queryByText(/Link copied/i);
+    const mensage = await screen.findByText(/link copied!/i);
     expect(mensage).toBeInTheDocument();
   });
 
@@ -173,6 +173,9 @@ describe('Testando página RecipeInProgress', () => {
 
     userEvent.click(buttonFavoritesWhiteHeart);
 
+    const LocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    expect(LocalStorage).toHaveLength(1);
+
     const buttonFavoritesBlackHeart = screen.getByRole('button', {
       name: /blackhearticon/i,
     });
@@ -180,7 +183,69 @@ describe('Testando página RecipeInProgress', () => {
     expect(buttonFavoritesBlackHeart).toBeInTheDocument();
 
     userEvent.click(buttonFavoritesWhiteHeart);
+
+    const LocalStorage2 = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    expect(LocalStorage2).toHaveLength(0);
+
     expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
+  });
+
+  it(`Testando se ao Renderiza a pagina o Localstorage
+  salva a receita em progresso para drinks`, async () => {
+    jest.spyOn(global, 'fetch');
+
+    renderWithRouter(<FoodRecipeInProgress />);
+
+    const buttonFavoritesWhiteHeart = screen.getByRole('button', {
+      name: /whitehearticon/i,
+    });
+    expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
+
+    const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+    expect(LocalStorage.cocktails[15997]).toHaveLength(3);
+  });
+
+  it(`Testando se ao Renderiza a pagina o Localstorage
+  salva a receita em progresso para drinks`, async () => {
+    jest.spyOn(global, 'fetch');
+
+    const { history } = renderWithRouter(<App />);
+
+    const email = screen.getByTestId(EMAIL_INPUT);
+    const password = screen.getByTestId(PASSWORD_INPUT);
+    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
+
+    userEvent.type(email, EMAIL);
+    userEvent.type(password, '1234567');
+
+    userEvent.click(button);
+
+    await waitFor(
+      () => {
+        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
+        userEvent.click(corbaRecipe);
+      },
+      { timeout: 4000 },
+    );
+
+    const buttonStart = screen.getByTestId('start-recipe-btn');
+    expect(buttonStart).toBeInTheDocument();
+
+    userEvent.click(buttonStart);
+
+    const lentilsCheckBox = await screen.findByTestId(/lentils/i);
+    expect(lentilsCheckBox).toBeInTheDocument();
+
+    userEvent.type(lentilsCheckBox);
+
+    history.goBack();
+
+    userEvent.click(buttonStart);
+
+    const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+    expect(LocalStorage.meals[52977]).toHaveLength(1);
   });
 });
 // npm run test-coverage -- --collectCoverageFrom=src/components/RecipeInProgress.js;
