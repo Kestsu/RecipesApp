@@ -139,17 +139,17 @@ function RecipeDetails() {
       <button type="button" data-testid="share-btn" onClick={ clickShare }>
         <img src={ shareIcon } alt="compartilhar" />
       </button>
-      <button type="button" onClick={ setFavoritesRecipes }>
+      <button type="button" data-testid="btn-favorite" onClick={ setFavoritesRecipes }>
         {isFavorite ? (
           <img
             src={ blackHeartIcon }
-            alt="favoritar"
+            alt="blackHeartIcon"
             data-testid="favorite-btn"
           />
         ) : (
           <img
             src={ whiteHeartIcon }
-            alt="favoritar"
+            alt="whiteHeartIcon"
             data-testid="favorite-btn"
           />
         )}

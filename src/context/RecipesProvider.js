@@ -10,6 +10,10 @@ import {
   fetchFoods,
   fetchFoodsByCategory,
 } from '../data';
+import {
+  readStorageDoneRecipes,
+  readStorageFavoriteRecipes,
+} from '../services/recipesLocalStorage';
 
 function RecipesProvider({ children }) {
   const [search, setSearch] = useState({
@@ -23,6 +27,8 @@ function RecipesProvider({ children }) {
   const [categoriesDrink, setCategoriesDrink] = useState([]);
   const [filterCategory, setFilterCategory] = useState('All');
   const [filteredData, setFilteredData] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [doneRecipes, setDoneRecipes] = useState([]);
 
   const history = useHistory();
 
@@ -77,7 +83,17 @@ function RecipesProvider({ children }) {
       setCategoriesDrink(allCategoriesDrink.drinks);
     };
 
+    const getFavoritesFromLocalStorage = () => {
+      setFavoriteRecipes(readStorageFavoriteRecipes());
+    };
+
+    const getDonesFromLocalStorage = () => {
+      setDoneRecipes(readStorageDoneRecipes());
+    };
+
     initialFetch();
+    getFavoritesFromLocalStorage();
+    getDonesFromLocalStorage();
   }, []);
 
   useEffect(() => {
@@ -113,6 +129,8 @@ function RecipesProvider({ children }) {
     filterCategory,
     setFilterCategory,
     filteredData,
+    favoriteRecipes,
+    doneRecipes,
   };
 
   return (
