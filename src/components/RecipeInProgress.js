@@ -158,13 +158,13 @@ function RecipeInProgress() {
         {isFavorite ? (
           <img
             src={ blackHeartIcon }
-            alt="favoritar"
+            alt="blackHeartIcon"
             data-testid="favorite-btn"
           />
         ) : (
           <img
             src={ whiteHeartIcon }
-            alt="favoritar"
+            alt="whiteHeartIcon"
             data-testid="favorite-btn"
           />
         )}
