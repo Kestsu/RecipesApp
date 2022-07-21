@@ -96,7 +96,7 @@ describe('Testando página RecipeInProgress', () => {
     const buttonShare = screen.getByTestId('share-btn');
     expect(buttonShare).toBeInTheDocument();
     userEvent.click(buttonShare);
-    expect(copy).toHaveBeenCalled();
+    expect(copy).toHaveBeenCalledWith('http://localhost:3000/foods/52977');
 
     const mensage = await screen.findByText(/link copied!/i);
     expect(mensage).toBeInTheDocument();
