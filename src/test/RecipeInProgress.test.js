@@ -161,6 +161,44 @@ describe('Testando página RecipeInProgress', () => {
     expect(doneRecipesTitle).toBeInTheDocument();
   });
 
+  it(`Testando se ao Renderiza a pagina o Localstorage
+  salva a receita em progresso para drinks`, async () => {
+    jest.spyOn(global, 'fetch');
+
+    const { history } = renderWithRouter(<App />);
+
+    const email = screen.getByTestId(EMAIL_INPUT);
+    const password = screen.getByTestId(PASSWORD_INPUT);
+    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
+
+    userEvent.type(email, EMAIL);
+    userEvent.type(password, '1234567');
+
+    userEvent.click(button);
+
+    await waitFor(
+      () => {
+        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
+        userEvent.click(corbaRecipe);
+      },
+      { timeout: 4000 },
+    );
+
+    const buttonStart = screen.getByTestId(BUTTONSTART);
+    expect(buttonStart).toBeInTheDocument();
+
+    userEvent.click(buttonStart);
+
+    const lentilsCheckBox = await screen.findByTestId(/lentils/i);
+    expect(lentilsCheckBox).toBeInTheDocument();
+    userEvent.type(lentilsCheckBox);
+    history.goBack();
+    userEvent.click(buttonStart);
+    const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+    expect(LocalStorage.meals[52977]).toHaveLength(1);
+  });
+
   it(`Testando se ao clicar no  botão Favorites 
   a a receita é marcada como favoritada`, async () => {
     jest.spyOn(global, 'fetch');
@@ -207,44 +245,5 @@ describe('Testando página RecipeInProgress', () => {
     const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
 
     expect(LocalStorage.cocktails[15997]).toHaveLength(TRES);
-  });
-
-  it(`Testando se ao Renderiza a pagina o Localstorage
-  salva a receita em progresso para drinks`, async () => {
-    jest.spyOn(global, 'fetch');
-
-    const { history } = renderWithRouter(<App />);
-
-    const email = screen.getByTestId(EMAIL_INPUT);
-    const password = screen.getByTestId(PASSWORD_INPUT);
-    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
-
-    userEvent.type(email, EMAIL);
-    userEvent.type(password, '1234567');
-
-    userEvent.click(button);
-
-    await waitFor(
-      () => {
-        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
-        userEvent.click(corbaRecipe);
-      },
-      { timeout: 4000 },
-    );
-
-    const buttonStart = screen.getByTestId(BUTTONSTART);
-    expect(buttonStart).toBeInTheDocument();
-
-    userEvent.click(buttonStart);
-
-    const lentilsCheckBox = await screen.findByTestId(/lentils/i);
-    expect(lentilsCheckBox).toBeInTheDocument();
-
-    userEvent.type(lentilsCheckBox);
-    history.goBack();
-    userEvent.click(buttonStart);
-    const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
-    expect(LocalStorage.meals[52977]).toHaveLength(1);
   });
 });
