@@ -22,39 +22,21 @@ describe('Testando página RecipeInProgress', () => {
   it('Testando se os elementos são renderizados corretamente para comidas', async () => {
     jest.spyOn(global, 'fetch');
 
-    renderWithRouter(<App />);
-
-    const email = screen.getByTestId(EMAIL_INPUT);
-    const password = screen.getByTestId(PASSWORD_INPUT);
-    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
-
-    userEvent.type(email, EMAIL);
-    userEvent.type(password, '1234567');
-
-    userEvent.click(button);
-
-    await waitFor(
-      () => {
-        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
-        userEvent.click(corbaRecipe);
-      },
-      { timeout: 4000 },
-    );
-
-    const buttonStart = screen.getByTestId(BUTTONSTART);
-    expect(buttonStart).toBeInTheDocument();
-
-    userEvent.click(buttonStart);
+    const { history } = renderWithRouter(<App />);
+    history.push('/foods/52977/in-progress');
 
     const recipeImg = screen.getByTestId('recipe-photo');
     const recipeTitle = screen.getByTestId('recipe-title');
     const buttonShare = screen.getByTestId('share-btn');
     const buttonFavorites = screen.getByTestId('favorite-btn');
     const recipeCategory = screen.getByTestId('recipe-category');
-    const ingredientTitle = screen.getByRole('heading', { name: /ingredients/i });
-    const instructionsTitle = screen.getByRole('heading', { name: /instructions/i });
+    const ingredientTitle = screen.getByRole('heading', {
+      name: /ingredients/i,
+    });
+    const instructionsTitle = screen.getByRole('heading', {
+      name: /instructions/i,
+    });
     const instructions = screen.getByTestId('instructions');
-
     const buttonFinish = screen.getByRole('button', {
       name: /finish/i,
     });
@@ -68,30 +50,32 @@ describe('Testando página RecipeInProgress', () => {
     expect(instructionsTitle).toBeInTheDocument();
     expect(instructions).toBeInTheDocument();
     expect(buttonFinish).toBeInTheDocument();
+
+    localStorage.clear();
   });
 
   it(`Testando se ao clicar no  botão Share 
   a mensagem "Link copied!" é renderizada para a página de comidas`, async () => {
     jest.spyOn(global, 'fetch');
-
     renderWithRouter(<App />);
+    const { history } = renderWithRouter(<App />);
+    history.push('/foods/52977/in-progress');
 
-    const email = screen.getByTestId(EMAIL_INPUT);
-    const password = screen.getByTestId(PASSWORD_INPUT);
-    const button = screen.getByTestId(LOGIN_SUBMIT_BTN);
+    const buttonShare = screen.getByTestId('share-btn');
+    expect(buttonShare).toBeInTheDocument();
+    userEvent.click(buttonShare);
+    expect(copy).toHaveBeenCalled();
 
-    userEvent.type(email, EMAIL);
-    userEvent.type(password, '1234567');
+    const mensage = await screen.findByText(/link copied!/i);
+    expect(mensage).toBeInTheDocument();
+  });
 
-    userEvent.click(button);
-
-    await waitFor(
-      () => {
-        const corbaRecipe = screen.getByTestId(RECIPE_CARD);
-        userEvent.click(corbaRecipe);
-      },
-      { timeout: 4000 },
-    );
+  it(`Testando se ao clicar no  botão Share 
+  a mensagem "Link copied!" é renderizada para a página de bebidas`, async () => {
+    jest.spyOn(global, 'fetch');
+    renderWithRouter(<App />);
+    const { history } = renderWithRouter(<App />);
+    history.push('/drinks/15997/in-progress');
 
     const buttonShare = screen.getByTestId('share-btn');
     expect(buttonShare).toBeInTheDocument();
@@ -105,7 +89,6 @@ describe('Testando página RecipeInProgress', () => {
   it(`Testando se o Botão de finalizar receita
       só é Habilitado após todos os check-Box serem preenchidos`, async () => {
     jest.spyOn(global, 'fetch');
-
     renderWithRouter(<App />);
 
     const email = screen.getByTestId(EMAIL_INPUT);
@@ -114,11 +97,9 @@ describe('Testando página RecipeInProgress', () => {
 
     userEvent.type(email, EMAIL);
     userEvent.type(password, '1234567');
-
     userEvent.click(button);
 
     const drinkButton = screen.getByTestId('drinks-bottom-btn');
-
     userEvent.click(drinkButton);
 
     await waitFor(
@@ -131,7 +112,6 @@ describe('Testando página RecipeInProgress', () => {
 
     const buttonStart = screen.getByTestId(BUTTONSTART);
     expect(buttonStart).toBeInTheDocument();
-
     userEvent.click(buttonStart);
 
     const checkBoxGaliano = await screen.findByTestId('Galliano');
@@ -151,7 +131,6 @@ describe('Testando página RecipeInProgress', () => {
     userEvent.type(checkBoxIce);
 
     expect(buttonFinish).toBeEnabled();
-
     userEvent.click(buttonFinish);
 
     const doneRecipesTitle = screen.getByRole('heading', {
@@ -173,7 +152,6 @@ describe('Testando página RecipeInProgress', () => {
 
     userEvent.type(email, EMAIL);
     userEvent.type(password, '1234567');
-
     userEvent.click(button);
 
     await waitFor(
@@ -186,7 +164,6 @@ describe('Testando página RecipeInProgress', () => {
 
     const buttonStart = screen.getByTestId(BUTTONSTART);
     expect(buttonStart).toBeInTheDocument();
-
     userEvent.click(buttonStart);
 
     const lentilsCheckBox = await screen.findByTestId(/lentils/i);
@@ -209,7 +186,6 @@ describe('Testando página RecipeInProgress', () => {
       name: /whitehearticon/i,
     });
     expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
-
     userEvent.click(buttonFavoritesWhiteHeart);
 
     const LocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -218,6 +194,9 @@ describe('Testando página RecipeInProgress', () => {
     const buttonFavoritesBlackHeart = screen.getByRole('button', {
       name: /blackhearticon/i,
     });
+    expect(buttonFavoritesBlackHeart).toBeInTheDocument();
+
+    window.location.reload();
 
     expect(buttonFavoritesBlackHeart).toBeInTheDocument();
 
@@ -225,7 +204,6 @@ describe('Testando página RecipeInProgress', () => {
 
     const LocalStorage2 = JSON.parse(localStorage.getItem('favoriteRecipes'));
     expect(LocalStorage2).toHaveLength(0);
-
     expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
   });
 
@@ -243,7 +221,6 @@ describe('Testando página RecipeInProgress', () => {
     expect(buttonFavoritesWhiteHeart).toBeInTheDocument();
 
     const LocalStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
     expect(LocalStorage.cocktails[15997]).toHaveLength(TRES);
   });
 });
