@@ -1,6 +1,6 @@
-<img src="https://user-images.githubusercontent.com/99990041/231234597-a77633d9-14c0-4a4c-b504-f44d3c5f92c8.png" width=300px>
-
 # Recipes APP: Uma plataforma de receitas. 🍩🍘🍪! (Front-end)
+
+<img src="https://user-images.githubusercontent.com/99990041/231234597-a77633d9-14c0-4a4c-b504-f44d3c5f92c8.png" width=250px>
 
 Nesse projeto, a pessoa que estiver utilizando o app pode procurar uma receita específica, explorar receitas baseado em diferentes critérios, favoritar e fazer as receitas, entre outras funcionalidades.
 
