@@ -22,7 +22,7 @@ Obs: A maneira como as APIs foram estruturadas seguem os seguintes modelos: http
 1. Faça o git clone na pasta local.
 
 ```bash
-git clone git@github.com:Kestsu/DeliveryApp.git
+git clone git@github.com:Kestsu/RecipesApp.git
 ```
 
 2. Instale as dependências.
